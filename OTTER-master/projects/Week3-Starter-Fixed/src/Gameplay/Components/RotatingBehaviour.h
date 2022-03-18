@@ -9,7 +9,7 @@ public:
 	typedef std::shared_ptr<RotatingBehaviour> Sptr;
 
 	RotatingBehaviour() = default;
-	glm::vec3 RotationSpeed;
+	glm::vec3 RotationSpeed{0.0f, 0.0f, 100.f};
 
 	virtual void Update(float deltaTime) override;
 

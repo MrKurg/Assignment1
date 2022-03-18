@@ -5,9 +5,9 @@
 
 ENUM_FLAGS(RenderFlags, uint32_t,
 	None = 0,
-	EnableCoolCorrection = 1 << 0,
-	EnableWarmCorrection = 1 << 1,
-	EnableCustomCorrection = 1 << 2
+	EnableCoolCorrection = 1 << 1,
+	EnableWarmCorrection = 1 << 2,
+	EnableCustomCorrection = 1 << 3
 );
 
 class RenderLayer final : public ApplicationLayer {

@@ -44,5 +44,24 @@ void JumpBehaviour::Update(float deltaTime) {
 			ptr->IsEnabled = !ptr->IsEnabled;
 		}
 	}
+
+	_body->SetAngularFactor(glm::vec3(0.0f, 0.0f, 0.0f));
+
+	if (InputEngine::GetKeyState(GLFW_KEY_D) == ButtonState::Pressed)
+	{
+		_body->SetLinearVelocity(glm::vec3(9.0f, 0.0f, 0.0f));
+	}
+	else if (InputEngine::GetKeyState(GLFW_KEY_A) == ButtonState::Pressed)
+	{
+		_body->SetLinearVelocity(glm::vec3(-9.0f, 0.0f, 0.0f));
+	}
+	else if (InputEngine::GetKeyState(GLFW_KEY_W) == ButtonState::Pressed)
+	{
+		_body->SetLinearVelocity(glm::vec3(0.0f, 9.0f, 0.0f));
+	}
+	else if (InputEngine::GetKeyState(GLFW_KEY_S) == ButtonState::Pressed)
+	{
+		_body->SetLinearVelocity(glm::vec3(0.0f, -9.0f, 0.0f));
+	}
 }
 

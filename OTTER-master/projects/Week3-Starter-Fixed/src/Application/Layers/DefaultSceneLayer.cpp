@@ -129,6 +129,12 @@ void DefaultSceneLayer::_CreateScene()
 		});
 		toonShader->SetDebugName("Toon Shader");
 
+		ShaderProgram::Sptr ambientShader = ResourceManager::CreateAsset<ShaderProgram>(std::unordered_map<ShaderPartType, std::string>{
+			{ ShaderPartType::Vertex, "shaders/vertex_shaders/basic.glsl" },
+			{ ShaderPartType::Fragment, "shaders/fragment_shaders/ambientLight.glsl" }
+		});
+		ambientShader->SetDebugName("Ambient Shader");
+
 		// This shader handles our displacement mapping example
 		ShaderProgram::Sptr displacementShader = ResourceManager::CreateAsset<ShaderProgram>(std::unordered_map<ShaderPartType, std::string>{
 			{ ShaderPartType::Vertex, "shaders/vertex_shaders/displacement_mapping.glsl" },
@@ -213,6 +219,13 @@ void DefaultSceneLayer::_CreateScene()
 			grassMaterial->Set("u_Material.Shininess", 0.1f);
 		}
 
+		Material::Sptr monkeyMaterial = ResourceManager::CreateAsset<Material>(basicShader);
+		{
+			monkeyMaterial->Name = "Monkey";
+			monkeyMaterial->Set("u_Material.Diffuse", monkeyTex);
+			monkeyMaterial->Set("u_Material.Shininess", 0.1f);
+		}
+
 		// This will be the reflective material, we'll make the whole thing 90% reflective
 		Material::Sptr swordMaterial = ResourceManager::CreateAsset<Material>(reflectiveShader);
 		{
@@ -236,7 +249,7 @@ void DefaultSceneLayer::_CreateScene()
 			destroyedPillarMaterial->Set("u_Material.Specular", boxSpec);
 		}
 
-		Material::Sptr intactPillarMaterial = ResourceManager::CreateAsset<Material>(specShader);
+		Material::Sptr intactPillarMaterial = ResourceManager::CreateAsset<Material>(basicShader);
 		{
 			intactPillarMaterial->Name = "Intact Pillar";
 			intactPillarMaterial->Set("u_Material.Diffuse", intactPillarTex);
@@ -274,6 +287,13 @@ void DefaultSceneLayer::_CreateScene()
 			toonMaterial->Set("u_Material.Steps", 8);
 		}
 
+		Material::Sptr ambientMaterial = ResourceManager::CreateAsset<Material>(ambientShader);
+		{
+			ambientMaterial->Name = "Ambient";
+			ambientMaterial->Set("u_Material.Diffuse", monkeyTex);
+			ambientMaterial->Set("u_Material.Shininess", 0.9f);
+			ambientMaterial->Set("u_Material.ambientStrength", 0.7f);
+		}
 
 		Material::Sptr displacementTest = ResourceManager::CreateAsset<Material>(displacementShader);
 		{
@@ -341,7 +361,7 @@ void DefaultSceneLayer::_CreateScene()
 			camera->LookAt(glm::vec3(0.0f));
 
 			camera->Add<SimpleCameraControl>();
-
+		
 			// This is now handled by scene itself!
 			//Camera::Sptr cam = camera->Add<Camera>();
 			// Make sure that the camera is set as the scene's main camera!
@@ -369,9 +389,11 @@ void DefaultSceneLayer::_CreateScene()
 		GameObject::Sptr sword = scene->CreateGameObject("Sword");
 		{
 			// Set position in the scene
-			sword->SetPostion(glm::vec3(-0.03f, 12.0f, -1.5f));
-			sword->SetRotation(glm::vec3(90.f, 0.f, 0.f));
+			sword->SetPostion(glm::vec3(0.12f, 12.1f, 8.15f));
+			sword->SetRotation(glm::vec3(-90.f, 0.f, 0.f));
 			sword->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+
+			sword->Add<RotatingBehaviour>();
 
 			// Add some behaviour that relies on the physics body
 			//sword->Add<JumpBehaviour>();
@@ -387,6 +409,25 @@ void DefaultSceneLayer::_CreateScene()
 			trigger->AddCollider(BoxCollider::Create(glm::vec3(1.0f)));
 
 			sword->Add<TriggerVolumeEnterBehaviour>();
+		}
+
+		// Box to showcase the specular material
+		GameObject::Sptr monkey = scene->CreateGameObject("Monkey");
+		{
+			// Set and rotation position in the scene
+			monkey->SetPostion(glm::vec3(0.f, 0.f, 2.f));
+			monkey->SetRotation(glm::vec3(0.f, 0.f, -90.f));
+			monkey->SetScale(glm::vec3(1.f, 1.f, 1.f));
+
+			monkey->Add<JumpBehaviour>();
+
+			// Add a render component
+			RenderComponent::Sptr renderer = monkey->Add<RenderComponent>();
+			renderer->SetMesh(monkeyMesh);
+			renderer->SetMaterial(ambientMaterial);
+
+			RigidBody::Sptr monkeyPhysics = monkey->Add<RigidBody>(RigidBodyType::Dynamic);
+			ICollider::Sptr monkeyCollider = monkeyPhysics->AddCollider(BoxCollider::Create());
 		}
 
 		//GameObject::Sptr demoBase = scene->CreateGameObject("Demo Parent");

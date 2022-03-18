@@ -28,21 +28,21 @@ void DebugWindow::RenderMenuBar()
 
 	RenderFlags flags = renderLayer->GetRenderFlags();
 	bool changed = false;
-	bool temp = *(flags & RenderFlags::EnableCoolCorrection);
-	bool temp2 = *(flags & RenderFlags::EnableWarmCorrection);
-	bool temp3 = *(flags & RenderFlags::EnableCustomCorrection);
+	bool tempCool = *(flags & RenderFlags::EnableCoolCorrection);
+	bool tempWarm = *(flags & RenderFlags::EnableWarmCorrection);
+	bool tempCustom = *(flags & RenderFlags::EnableCustomCorrection);
 
-	if (ImGui::Checkbox("Enable Cool Colour Correction", &temp)) {
+	if (ImGui::Checkbox("Enable Cool Colour Correction", &tempCool)) {
 		changed = true;
-		flags = (flags & ~*RenderFlags::EnableCoolCorrection) | (temp ? RenderFlags::EnableCoolCorrection: RenderFlags::None);
+		flags = (flags & ~*RenderFlags::EnableCoolCorrection) | (tempCool ? RenderFlags::EnableCoolCorrection: RenderFlags::None);
 	}
-	if (ImGui::Checkbox("Enable Warm Colour Correction", &temp2)) {
+	if (ImGui::Checkbox("Enable Warm Colour Correction", &tempWarm)) {
 		changed = true;
-		flags = (flags & ~*RenderFlags::EnableWarmCorrection) | (temp2 ? RenderFlags::EnableWarmCorrection : RenderFlags::None);
+		flags = (flags & ~*RenderFlags::EnableWarmCorrection) | (tempWarm ? RenderFlags::EnableWarmCorrection : RenderFlags::None);
 	}
-	if (ImGui::Checkbox("Enable Custom Colour Correction", &temp3)) {
+	if (ImGui::Checkbox("Enable Custom Colour Correction", &tempCustom)) {
 		changed = true;
-		flags = (flags & ~*RenderFlags::EnableCustomCorrection) | (temp3 ? RenderFlags::EnableCustomCorrection : RenderFlags::None);
+		flags = (flags & ~*RenderFlags::EnableCustomCorrection) | (tempCustom ? RenderFlags::EnableCustomCorrection : RenderFlags::None);
 	}
 
 	if (changed) {
