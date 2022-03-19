@@ -361,6 +361,7 @@ void DefaultSceneLayer::_CreateScene()
 			camera->LookAt(glm::vec3(0.0f));
 
 			camera->Add<SimpleCameraControl>();
+
 		
 			// This is now handled by scene itself!
 			//Camera::Sptr cam = camera->Add<Camera>();
